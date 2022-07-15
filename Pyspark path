@@ -1,0 +1,14 @@
+!whereis pyspark
+
+import os
+os.chdir('/usr/local/lib/python3.5/dist-packages')
+
+import findspark
+findspark.init('/usr/local/spark/')
+
+import pyspark
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
