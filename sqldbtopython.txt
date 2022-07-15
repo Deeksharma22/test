@@ -1,0 +1,71 @@
+
+import pyodbc
+server = 'appdemojune.database.windows.net'
+database = 'AppDB'
+username = 'Adminlogin'
+password = 'Paaword'   
+driver= '{ODBC Driver 17 for SQL Server}'
+
+with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT TOP 3 name, collation_name FROM sys.databases")
+        row = cursor.fetchone()
+        while row:
+            print (str(row[0]) + " " + str(row[1]))
+            row = cursor.fetchone()
+
+
+------------------------Apply joins on exiting table---------------------------------------
+
+cursor.execute("SELECT TOP 20 pc.Name as CategoryName, p.name as ProductName FROM [SalesLT].[ProductCategory] pc JOIN [SalesLT].[Product] p ON pc.productcategoryid = p.productcategoryid")
+row = cursor.fetchone()
+while row:
+    print (str(row[0]) + " " + str(row[1]))
+    row = cursor.fetchone()
+
+
+--------------------------Select from existing table ----------------------
+with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM SalesLT.Customer")
+        row = cursor.fetchall()
+        for i in range(10):
+            print(row[i])
+
+---------------------create Table in SQL DB--------------------------------------
+
+with pyodbc.connect('DRIVER= '+ driver + '; SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute('''DROP TABLE IF EXISTS dbo.Customers
+CREATE TABLE dbo.Customers(
+	[Customer ID] int,
+	[Customer Name] nvarchar(20)
+)''')
+
+----------------Insert record in table --------------------------
+
+with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("INSERT INTO dbo.Customers([Customer ID], [Customer Name]) VALUES(1211, 'Rosy')")
+
+----------------select record from table--------------------------
+with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM dbo.Customers")
+        row = cursor.fetchall()
+        for i in range(1):
+            print(row[i])
+
+-----------------update record ------------------
+
+with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("UPDATE [dbo].[Customers] SET [Customer Name] = 'trail' WHERE [Customer ID] = 1212")
+
+----------------delete record------------------------
+
+with pyodbc.connect('DRIVER= '+ driver + '; SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("DELETE FROM dbo.[Customers] WHERE [Customer ID] = 1212")
+
+
